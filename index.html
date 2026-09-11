@@ -576,7 +576,8 @@ const DEFS = [
    pop: p => popup(p.taken ? p.taken.replace(/:(\d\d):(\d\d) /, '-$1-$2 ') : p.file, [
      p.thumb_src
        ? `<a href="${p.href || '#'}" target="_blank" rel="noopener" class="photolink">
-            <img src="${p.thumb_src}" alt="" loading="lazy"></a>`
+            <img src="${p.thumb_src}" alt="" loading="lazy"
+                 onerror="this.closest('.photolink').remove()"></a>`
        : '',
      kv('Altitude', p.alt_m != null ? p.alt_m + ' m' : '—'),
      kv('File', p.file),
