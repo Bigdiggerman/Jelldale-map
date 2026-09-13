@@ -26,7 +26,7 @@ body{
 /* ---------- shell ---------- */
 #shell{display:flex;flex-direction:column;height:100vh}
 header{
-  display:flex;align-items:center;gap:20px;flex-wrap:wrap;
+  display:flex;align-items:center;gap:20px;flex-wrap:nowrap;
   padding:13px 20px;flex:0 0 auto;
   background:linear-gradient(180deg,#1b2116 0%,var(--panel) 100%);
   border-bottom:2px solid var(--sage);
@@ -39,7 +39,9 @@ header h1{
   margin:0;letter-spacing:1.2px;text-transform:uppercase;color:var(--ink);
 }
 header h1 span{color:var(--accent);font-weight:400}
-.sub{color:var(--ink2);font-size:12px;letter-spacing:.2px}
+.sub{color:var(--ink2);font-size:12px;letter-spacing:.2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+header h1{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.titleblock{flex:0 1 auto}
 .sub b{color:var(--accent);font-weight:600}
 .spacer{flex:1}
 @media (max-width:1100px){
@@ -241,6 +243,17 @@ a.leaflet-popup-close-button{color:var(--ink3)!important}
   border-radius:6px;padding:4px 9px;font:inherit;font-size:11.5px;cursor:pointer;
 }
 #toggleDash:hover{color:var(--accent)}
+/* contact agent: header on desktop, floating pill on phones */
+.contact{display:flex;gap:6px;align-items:center;flex:0 0 auto}
+.contact a{
+  display:inline-flex;align-items:center;gap:6px;text-decoration:none;white-space:nowrap;
+  font-size:11.5px;font-weight:600;border-radius:6px;padding:5px 11px;border:1px solid var(--line);
+}
+.contact a.mail{background:var(--accent);color:#14190a;border-color:var(--accent)}
+.contact a.mail:hover{background:#b3c57f}
+.contact a.tel{background:var(--panel2);color:var(--ink);font-variant-numeric:tabular-nums}
+.contact a.tel:hover{border-color:var(--sage);color:var(--accent)}
+#contactfab{display:none}
 #sheethandle{display:none}
 /* ---------- small screens ----------
    Below 700px the three panels stack instead of sitting side by side: the
@@ -295,6 +308,13 @@ a.leaflet-popup-close-button{color:var(--ink3)!important}
   #layers header{padding:9px 12px;font-size:11px}
   #coords{display:none}
   .leaflet-popup-content{min-width:160px;max-width:78vw}
+  #contacthdr{display:none}
+  #contactfab{
+    display:flex;position:absolute;left:10px;bottom:34px;z-index:900;gap:5px;
+    background:rgba(23,28,18,.95);border:1px solid var(--line);border-radius:9px;
+    padding:5px;backdrop-filter:blur(8px);
+  }
+  #contactfab a{padding:8px 11px;font-size:12px}
 }
 </style>
 <link rel="icon" href="data:image/png;base64,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">
@@ -315,6 +335,7 @@ a.leaflet-popup-close-button{color:var(--ink3)!important}
       <div class="sub" id="hdrsub"></div>
     </div>
     <div class="spacer"></div>
+    <div class="contact" id="contacthdr"></div>
     <div class="basebar" id="basebar"></div>
   </header>
 
@@ -331,7 +352,7 @@ a.leaflet-popup-close-button{color:var(--ink3)!important}
       <div class="tabpane" id="pane-data"></div>
       <div id="brandfoot">
         <img src="data:image/png;base64,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" alt="">
-        <span>Prepared by <b>Searle Forestry</b><br>Licensed under the Real Estate Agents Act 2008</span>
+        <span>Prepared by <b>Searle Forestry</b><span id="footcontact"></span><br>Licensed under the Real Estate Agents Act 2008</span>
       </div>
     </aside>
 
@@ -342,6 +363,7 @@ a.leaflet-popup-close-button{color:var(--ink3)!important}
         <div id="layerbody"></div>
       </div>
       <div id="coords"></div>
+      <div class="contact" id="contactfab"></div>
     </div>
   </div>
 </div>
@@ -927,21 +949,41 @@ document.getElementById('toggleDash').onclick = toggleDash;
 document.getElementById('sheethandle').onclick = toggleDash;
 
 /* Phones start map-first: dashboard sheet down, overlay panel folded to a
-   pill. Both are one tap away; the map is what people open the link for. */
+   pill, and the base-layer select moved from the header into the overlay
+   panel so the header has room for the brand and the full property name.
+   Reversible, so a window that is resized or a tablet that is rotated gets
+   the right layout rather than the one it loaded with. */
 const SMALL = window.matchMedia('(max-width: 700px)');
-if (SMALL.matches) {
-  document.getElementById('dash').classList.add('collapsed');
+function applySmall(on) {
+  const dash = document.getElementById('dash');
   const lp = document.getElementById('layers');
-  lp.classList.add('min');
-  document.getElementById('lyrcar').innerHTML = '&#9656;';
-  // The base-layer select moves from the header into the overlay panel, so
-  // the header has room for the brand and the full property name.
   const bb = document.getElementById('basebar');
-  bb.classList.add('inpanel');
-  document.getElementById('layerbody').prepend(bb);
-  // Opening a popup on a phone: close the sheet so the popup is not under it.
-  map.on('popupopen', () => document.getElementById('dash').classList.add('collapsed'));
+  if (on) {
+    dash.classList.add('collapsed');
+    lp.classList.add('min');
+    document.getElementById('lyrcar').innerHTML = '&#9656;';
+    bb.classList.add('inpanel');
+    document.getElementById('layerbody').prepend(bb);
+  } else {
+    dash.classList.remove('collapsed');
+    lp.classList.remove('min');
+    document.getElementById('lyrcar').innerHTML = '&#9662;';
+    bb.classList.remove('inpanel');
+    document.getElementById('contacthdr').after(bb);
+  }
+  setTimeout(() => map.invalidateSize(), 50);
 }
+let smallApplied = null;
+function syncSmall() {
+  const m = SMALL.matches;
+  if (m !== smallApplied) { smallApplied = m; applySmall(m); }
+}
+syncSmall();
+SMALL.addEventListener('change', syncSmall);
+let _rt;
+window.addEventListener('resize', () => { clearTimeout(_rt); _rt = setTimeout(syncSmall, 120); });
+// Opening a popup on a phone: close the sheet so the popup is not under it.
+map.on('popupopen', () => { if (SMALL.matches) document.getElementById('dash').classList.add('collapsed'); });
 
 /* ===== dashboard ===== */
 (() => {
@@ -1319,6 +1361,25 @@ document.getElementById('pane-terrain').innerHTML = `
    embedded (the Artifact sandbox blocks downloads outright), so it lists
    what exists and routes the request to the agents. */
 const DR = window.PROPMAP_DATAROOM;
+
+/* Contact agent: the first contact in property.json is the lead; the rest
+   are cc'd so an enquiry reaches the whole team. */
+(() => {
+  const cs = DR.contact || [];
+  const c = cs[0];
+  if (!c) return;
+  const subj = encodeURIComponent(`Enquiry: ${P.name}`);
+  const body = encodeURIComponent(`Hi ${c.name.split(' ')[0]},\n\nI'd like to know more about ${P.name}.\n\n`);
+  const cc = cs.slice(1).map(x => x.email).filter(Boolean).join(',');
+  const href = `mailto:${c.email}?subject=${subj}${cc ? '&cc=' + cc : ''}&body=${body}`;
+  const tel = (c.phone || '').replace(/[^\d+]/g, '');
+  const shown = (c.phone || '').replace(/^\+64\s?/, '0');   // 021 … reads better locally; tel: keeps +64
+  const html = `<a class="mail" href="${href}" title="Email ${c.name}">&#9993;&#xFE0E; Contact agent</a>`
+    + (c.phone ? `<a class="tel" href="tel:${tel}" title="Call ${c.name}">&#9742;&#xFE0E; ${shown}</a>` : '');
+  ['contacthdr', 'contactfab'].forEach(id => { document.getElementById(id).innerHTML = html; });
+  const fc = document.getElementById('footcontact');
+  if (fc && c.phone) fc.innerHTML = ` &middot; ${c.name} <a href="tel:${tel}" style="color:var(--ink);white-space:nowrap">${shown}</a>`;
+})();
 const LINKED = !STATIC_AERIAL;
 
 const EXT_COLOUR = {
